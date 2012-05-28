@@ -1,0 +1,4 @@
+Title     : ももいろクラブ
+Category1 : エンターテイメント
+Category2 : 地域＆国内
+Deeplink  : 

@@ -1,0 +1,13 @@
+Desc1     : lovely momoclo's app
+Desc2     :
+Do you know 'momoclo'? Read blog articles of momoclo by using this application. You can also read web scraps of momoclo.
+
+Enabling push notification, you can receive momoclo's updates.
+
+*MEMBER NAME AND BLOG ARTICLE IS DISPLAYED IN JAPANESE.
+*PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
+
+Versions
+1.0.0.0: First release.
+
+Keywords  : momoiro;clover;momoclo

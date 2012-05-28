@@ -1,0 +1,759 @@
+﻿<Application 
+    x:Class="MomocloNews.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"       
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:helpers="clr-namespace:Helpers"
+    xmlns:converters="clr-namespace:MomocloNews.Converters"
+    xmlns:locators="clr-namespace:MomocloNews.Locators"
+    xmlns:localControls="clr-namespace:MomocloNews.LocalControls"
+    >
+
+    <!--アプリケーション リソース-->
+    <Application.Resources>
+
+        <locators:ViewModelLocator x:Key="Locator"/>
+
+        <local:LocalizedResources
+            xmlns:local ="clr-namespace:MomocloNews.Localization"
+            x:Key="LocalizedResources"
+            />
+
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:BooleanToInverseVisibilityConverter x:Key="BooleanToInverseVisibilityConverter"/>
+        <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter"/>
+        <converters:InverseVisibilityToBooleanConverter x:Key="InverseVisibilityToBooleanConverter"/>
+        <converters:ColorCodeToSolidColorBrushConverter x:Key="ColorCodeToSolidColorBrushConverter"/>
+        <converters:DateTimeToTimelineFormatStringConverter x:Key="DateTimeToTimelineFormatStringConverter"/>
+
+        <Style TargetType="ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ScrollStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="00:00:00.5"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Scrolling">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="VerticalScrollBar" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0"/>
+                                            <DoubleAnimation Storyboard.TargetName="HorizontalScrollBar" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="NotScrolling">
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="VerticalCompression">
+                                    <VisualState x:Name="NoVerticalCompression"/>
+                                    <VisualState x:Name="CompressionTop"/>
+                                    <VisualState x:Name="CompressionBottom"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="HorizontalCompression">
+                                    <VisualState x:Name="NoHorizontalCompression"/>
+                                    <VisualState x:Name="CompressionLeft"/>
+                                    <VisualState x:Name="CompressionRight"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid Margin="{TemplateBinding Padding}">
+                                <ScrollContentPresenter x:Name="ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                                <ScrollBar x:Name="VerticalScrollBar" IsHitTestVisible="False" Opacity="0.3" Height="Auto" Width="5" HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" IsTabStop="False" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Value="{TemplateBinding VerticalOffset}" Orientation="Vertical" ViewportSize="{TemplateBinding ViewportHeight}" Background="#FF3399"/>
+                                <ScrollBar x:Name="HorizontalScrollBar" IsHitTestVisible="False" Opacity="0.3" Width="Auto" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Value="{TemplateBinding HorizontalOffset}" Orientation="Horizontal" ViewportSize="{TemplateBinding ViewportWidth}" Background="#FF3399" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="HyperlinkEmptyStyle" TargetType="HyperlinkButton">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HyperlinkButton">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SinglelineHyperlinkStyle" TargetType="localControls:HeaderedContentControl">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,24"/>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Padding="{StaticResource PhoneMargin}">
+                            <TextBlock Style="{StaticResource PhoneTextNormalStyle}"
+                                Text="{Binding}"
+                                TextWrapping="Wrap"
+                                TextDecorations="Underline"
+                                />
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MultilineHyperlinkStyle" TargetType="localControls:HeaderedContentControl">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,24"/>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Padding="{StaticResource PhoneMargin}">
+                            <TextBlock
+                                Style="{StaticResource PhoneTextExtraLargeStyle}"
+                                Text="{Binding}"
+                                TextWrapping="Wrap"
+                                />
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Padding="{StaticResource PhoneMargin}">
+                            <TextBlock
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                Opacity=".5"
+                                Text="{Binding}"
+                                TextWrapping="Wrap"
+                                TextDecorations="Underline"
+                                />
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PhoneButtonBase" TargetType="ButtonBase">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+            <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+            <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+            <Setter Property="Padding" Value="10,3,10,5"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ButtonBase">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneBackgroundBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneForegroundBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneForegroundBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="ButtonBackground" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0" Background="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}" >
+                                <ContentControl x:Name="ContentContainer" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Padding="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="toolkit:HubTile">
+            <Style.Setters>
+                <Setter Property="Height" Value="173"/>
+                <Setter Property="Width" Value="173"/>
+                <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}"/>
+                <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="toolkit:HubTile">
+                            <StackPanel x:Name="Viewport"
+                                        Height="173" Width="173">
+                                <StackPanel.Resources>
+                                    <CubicEase EasingMode="EaseOut" x:Key="HubTileEaseOut"/>
+                                </StackPanel.Resources>
+                                <StackPanel.Projection>
+                                    <PlaneProjection CenterOfRotationY="0.25" x:Name="ViewportProjection"/>
+                                </StackPanel.Projection>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="ImageStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition x:Name="ExpandedToSemiexpanded" 
+                                                              From="Expanded" To="Semiexpanded"
+                                                              GeneratedDuration="0:0:0.85">
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                                   Storyboard.TargetName="TitlePanel">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-173.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.85" Value="-79.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RotationX" 
+                                                                                   Storyboard.TargetName="ViewportProjection">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition x:Name="SemiexpandedToCollapsed" 
+                                                              From="Semiexpanded" To="Collapsed"
+                                                              GeneratedDuration="0:0:0.85">
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                                   Storyboard.TargetName="TitlePanel">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-79.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.85" Value="0.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition x:Name="CollapsedToExpanded" 
+                                                              From="Collapsed" To="Expanded"
+                                                              GeneratedDuration="0:0:0.85">
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                                   Storyboard.TargetName="TitlePanel">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.85" Value="-173.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition x:Name="ExpandedToFlipped" 
+                                                              From="Expanded" To="Flipped"
+                                                              GeneratedDuration="0:0:0.85">
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                                   Storyboard.TargetName="TitlePanel">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-173.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                                   Storyboard.TargetName="Image">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.185" Value="Collapsed"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RotationX" 
+                                                                                   Storyboard.TargetName="ViewportProjection">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.85" Value="180.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                            <VisualTransition x:Name="FlippedToExpanded" 
+                                                              From="Flipped" To="Expanded"
+                                                              GeneratedDuration="0:0:0.85">
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                                   Storyboard.TargetName="TitlePanel">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="-173.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                                   Storyboard.TargetName="Image">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.185" Value="Visible"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RotationX" 
+                                                                                   Storyboard.TargetName="ViewportProjection">
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="180.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.85" Value="360.0" EasingFunction="{StaticResource HubTileEaseOut}"/>
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualTransition>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualStateGroup.States>
+                                            <VisualState x:Name="Expanded">
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0" To="-173.0" 
+                                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                     Storyboard.TargetName="TitlePanel"/>
+                                                    <DoubleAnimation Duration="0" To="0.0" 
+                                                                     Storyboard.TargetProperty="RotationX" 
+                                                                     Storyboard.TargetName="ViewportProjection"/>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                                   Storyboard.TargetName="Image">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="Semiexpanded">
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0" To="-79.0" 
+                                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                     Storyboard.TargetName="TitlePanel"/>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="Collapsed"/>
+                                            <VisualState x:Name="Flipped">
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0" To="-173.0" 
+                                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" 
+                                                                     Storyboard.TargetName="TitlePanel"/>
+                                                    <DoubleAnimation Duration="0" To="180.0" 
+                                                                     Storyboard.TargetProperty="RotationX" 
+                                                                     Storyboard.TargetName="ViewportProjection"/>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                                   Storyboard.TargetName="Image">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState>
+                                        </VisualStateGroup.States>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Grid x:Name="TitlePanel"
+                                      Height="346" Width="173"
+                                      RenderTransformOrigin="0.5,0.5">
+                                    <Grid.RenderTransform>
+                                        <CompositeTransform/>
+                                    </Grid.RenderTransform>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0"                                        
+                                            Background="{TemplateBinding Background}">
+                                        <TextBlock VerticalAlignment="Bottom"
+                                                   Margin="10,0,0,6"
+                                                   Text="{TemplateBinding Title}"
+                                                   FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                                   FontSize="36"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   TextWrapping="Wrap" 
+                                                   TextTrimming="WordEllipsis"
+                                                   LineStackingStrategy="BlockLineHeight"
+                                                   LineHeight="39">
+                                        </TextBlock>
+                                    </Border>
+                                    <Grid x:Name="BackPanel"
+                                          Grid.Row="1"   
+                                          Height="173" Width="173"
+                                          Background="{TemplateBinding Background}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.Projection>
+                                            <PlaneProjection CenterOfRotationY="0.5" RotationX="180"/>
+                                        </Grid.Projection>
+                                        <TextBlock x:Name="NotificationBlock" Grid.Row="0"
+                                                   Margin="8,8,0,6"
+                                                   Text="{TemplateBinding Notification}"
+                                                   FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                                   FontSize="{StaticResource PhoneFontSizeLarge}"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="WordEllipsis"
+                                                   LineStackingStrategy="BlockLineHeight"
+                                                   LineHeight="32"/>
+                                        <TextBlock x:Name="MessageBlock" Grid.Row="0"
+                                                   Margin="10,10,10,6"
+                                                   Text="{TemplateBinding Message}"
+                                                   FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                                   FontSize="{StaticResource PhoneFontSizeNormal}"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="WordEllipsis"
+                                                   LineStackingStrategy="BlockLineHeight"
+                                                   LineHeight="23.333"/>
+                                        <TextBlock x:Name="BackTitleBlock" Grid.Row="1" 
+                                                   VerticalAlignment="Bottom" 
+                                                   Margin="10,0,0,6"
+                                                   FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                                                   FontSize="{StaticResource PhoneFontSizeNormal}"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="WordEllipsis"/>
+                                    </Grid>
+                                    <Image x:Name="Image" Grid.Row="1"
+                                           Height="173" Width="173"
+                                           Stretch="UniformToFill"
+                                           Source="{TemplateBinding Source}"/>
+                                </Grid>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
+
+        <!-- メンバー記事リスト:アイテム -->
+        <DataTemplate x:Key="MemberFeedItemItemTemplate">
+            <helpers:ResourceDataTemplateSelector Content="{Binding}">
+                <helpers:ResourceDataTemplateSelector.Resources>
+                    <!-- 標準アイテム -->
+                    <DataTemplate x:Key="FeedItemNormalTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,0,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 左のカラーバー -->
+                                <Rectangle
+                                    Grid.Column="0"
+                                    Fill="{Binding FeedChannelAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    />
+
+                                <!-- 背景色 -->
+                                <Rectangle
+                                    Grid.Column="1"
+                                    Fill="{Binding FeedChannelAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    Opacity="0.15"
+                                    />
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorNickName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="32"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+
+                                    <!-- チャンネルタイトル -->
+                                    <TextBlock
+                                        FontSize="13"
+                                        TextAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedChannelTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- 画像付きアイテム -->
+                    <DataTemplate x:Key="FeedItemImageTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,0,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 左のカラーバー -->
+                                <Rectangle
+                                    Grid.Column="0"
+                                    Fill="{Binding FeedChannelAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    />
+
+                                <!-- 背景色 -->
+                                <Rectangle
+                                    Grid.Column="1"
+                                    Fill="{Binding FeedChannelAccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                                    Opacity="0.15"
+                                    />
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorNickName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- 列定義 -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="145"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- アイテム画像 -->
+                                        <Image
+                                            Grid.Column="0"
+                                            Margin="5,0,0,0"
+                                            Width="140"
+                                            Height="140"
+                                            >
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding Images.[0]}"/>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="30"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+
+                                    <!-- チャンネルタイトル -->
+                                    <TextBlock
+                                        FontSize="13"
+                                        TextAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding FeedChannelTitle}"
+                                        Style="{StaticResource PhoneTextSubtleStyle}"
+                                        />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </helpers:ResourceDataTemplateSelector.Resources>
+            </helpers:ResourceDataTemplateSelector>
+        </DataTemplate>
+
+        <!-- まとめ記事リスト:アイテム -->
+        <DataTemplate x:Key="MatomeFeedItemItemTemplate">
+            <helpers:ResourceDataTemplateSelector Content="{Binding}">
+                <helpers:ResourceDataTemplateSelector.Resources>
+                    <!-- 標準アイテム -->
+                    <DataTemplate x:Key="FeedItemNormalTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,20,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelAuthorName}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="32"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+
+                    <!-- 画像付きアイテム -->
+                    <DataTemplate x:Key="FeedItemImageTemplate">
+                        <!-- アイテム -->
+                        <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                            <Grid Width="435" Margin="5,20,0,0">
+                                <!-- 列定義 -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- チャンネル -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- チャンネル著者名+アイテム日時 -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- チャンネル著者名 -->
+                                        <TextBlock
+                                            Width="260"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding FeedChannelTitle}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+
+                                        <!-- アイテム日時 -->
+                                        <TextBlock
+                                            Width="117"
+                                            FontSize="13"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            TextWrapping="NoWrap"
+                                            Text="{Binding PublishedAt, Converter={StaticResource DateTimeToTimelineFormatStringConverter}}"
+                                            Style="{StaticResource PhoneTextSubtleStyle}"
+                                            />
+                                    </StackPanel>
+
+                                    <!-- アイテム -->
+                                    <Grid Margin="0,10,0,10">
+                                        <!-- 列定義 -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="145"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- アイテム画像 -->
+                                        <Image
+                                            Grid.Column="0"
+                                            Margin="5,0,0,0"
+                                            Width="140"
+                                            Height="140"
+                                            >
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding Images.[0]}"/>
+                                            </Image.Source>
+                                        </Image>
+
+                                        <!-- アイテムタイトル -->
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            FontSize="30"
+                                            TextAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            TextWrapping="Wrap"
+                                            Text="{Binding Title}"
+                                            Style="{StaticResource PhoneTextNormalStyle}"
+                                            />
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </helpers:ResourceDataTemplateSelector.Resources>
+            </helpers:ResourceDataTemplateSelector>
+        </DataTemplate>
+
+        <!-- メンバーリスト:アイテム -->
+        <DataTemplate x:Key="FeedChannelItemTemplate">
+            <toolkit:HubTile
+                GroupTag="FeedChannel"
+                Margin="12,12,0,0"
+                Background="{Binding AccentColor, Converter={StaticResource ColorCodeToSolidColorBrushConverter}}"
+                Title="{Binding AuthorNickName}"
+                Source="{Binding Image}"
+                DisplayNotification="True"
+                Notification="{Binding FeedItemLastTitle}"
+                >
+            </toolkit:HubTile>
+        </DataTemplate>
+
+        <!-- メンバーリスト:パネル -->
+        <ItemsPanelTemplate x:Key="FeedChannelItemsPanelTemplate">
+            <toolkit:WrapPanel/>
+        </ItemsPanelTemplate>
+
+    </Application.Resources>
+
+    <Application.ApplicationLifetimeObjects>
+        <!--アプリケーションのライフタイム イベントを処理する必須オブジェクト-->
+        <shell:PhoneApplicationService 
+            Launching="Application_Launching" Closing="Application_Closing" 
+            Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+    </Application.ApplicationLifetimeObjects>
+
+</Application>
