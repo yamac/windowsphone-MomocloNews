@@ -9,10 +9,10 @@
     xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-    xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
+    xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
     xmlns:c4f="clr-namespace:Coding4Fun.Phone.Controls;assembly=Coding4Fun.Phone.Controls"
+    xmlns:mvvm="clr-namespace:SimpleMvvmToolkit;assembly=SimpleMvvmToolkit-WP7"
     xmlns:helpers="clr-namespace:Helpers"
-    xmlns:converters="clr-namespace:MomocloNews.Converters"
     xmlns:localControls="clr-namespace:MomocloNews.LocalControls"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -26,9 +26,6 @@
 
     <!-- リソース -->
     <phone:PhoneApplicationPage.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        <converters:ToggleSwitchContentConverter x:Key="ToggleSwitchContentConverter"/>
-        <helpers:AppAttributes x:Key="AppAttributes"/>
     </phone:PhoneApplicationPage.Resources>
 
     <!-- ページ切り替え効果 -->
