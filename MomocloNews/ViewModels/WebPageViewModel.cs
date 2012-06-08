@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
+using Microsoft.Phone.Tasks;
 using MomocloNews.Data;
 using MomocloNews.Navigation;
-using Microsoft.Phone.Tasks;
 using SimpleMvvmToolkit;
 
 namespace MomocloNews.ViewModels
