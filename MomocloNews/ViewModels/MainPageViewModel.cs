@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Windows.Input;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using MomocloNews.Data;
 using MomocloNews.Navigation;
 using MomocloNews.Services;
-using Microsoft.Phone.Controls;
 using SimpleMvvmToolkit;
-using Microsoft.Phone.Shell;
-using System.Linq;
-using System.Globalization;
-using System.Threading;
 
 namespace MomocloNews.ViewModels
 {
@@ -84,8 +83,6 @@ namespace MomocloNews.ViewModels
         /**************
          * Properties *
          **************/
-
-        private bool initialized = false;
 
         private bool _IsBusy = false;
         public bool IsBusy
@@ -177,20 +174,20 @@ namespace MomocloNews.ViewModels
                     switch (e.SelectedIndex)
                     {
                         case 0:
-                        {
-                            MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
-                            break;
-                        }
+                            {
+                                MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                                break;
+                            }
                         case 1:
-                        {
-                            MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
-                            break;
-                        }
-                        case 2:
-                        {
-                            ChannelsListViewModel.LoadAllFeedGroupsAndChannels();
-                            break;
-                        }
+                            {
+                                MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                                break;
+                            }
+                        default:
+                            {
+                                ChannelsListViewModel.LoadAllFeedGroupsAndChannels();
+                                break;
+                            }
                     }
                 }
                 ,
@@ -200,15 +197,25 @@ namespace MomocloNews.ViewModels
                     {
                         return false;
                     }
-                    if (!initialized)
-                    {
-                        return true;
-                    }
                     if (e.SelectedItem == null)
                     {
                         return false;
                     }
-                    return !(e.SelectedItem as ChannelsUpdatesListViewModel).IsBusy;
+                    switch (e.SelectedIndex)
+                    {
+                        case 0:
+                            {
+                                return !MemberChannelsUpdatesListViewModel.IsBusy;
+                            }
+                        case 1:
+                            {
+                                return !MatomeChannelsUpdatesListViewModel.IsBusy;
+                            }
+                        default:
+                            {
+                                return !ChannelsListViewModel.IsBusy;
+                            }
+                    }
                 }
                 );
             }
