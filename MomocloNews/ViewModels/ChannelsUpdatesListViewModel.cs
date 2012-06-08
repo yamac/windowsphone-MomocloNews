@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Phone.Controls;
 using MomocloNews.Data;
 using MomocloNews.Navigation;
 using MomocloNews.Services;
-using Microsoft.Phone.Controls;
 using SimpleMvvmToolkit;
-using System.Globalization;
-using System.Threading;
-using Microsoft.Phone.Tasks;
 
 namespace MomocloNews.ViewModels
 {
