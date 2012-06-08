@@ -4,10 +4,11 @@ Do you know 'momoclo'? Read blog articles of momoclo by using this application. 
 
 Enabling push notification, you can receive momoclo's updates.
 
-*MEMBER NAME AND BLOG ARTICLE IS DISPLAYED IN JAPANESE.
+*SOME CONTENTS SUCH AS MEMBER NAMES, BLOG TITLES AND BLOG ARTICLES ARE DISPLAYED IN JAPANESE.
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+1.1.0.0: Improved push notification functionality.
 1.0.0.0: First release.
 
-Keywords  : momoiro;clover;momoclo
+Keywords  : momoiro;clover;momoclo;Ç‡Ç‡ÉNÉç;Ç‡Ç‡Ç¢ÇÎ
