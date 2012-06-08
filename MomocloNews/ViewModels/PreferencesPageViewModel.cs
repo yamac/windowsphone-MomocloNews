@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using MomocloNews.Data;
-using MomocloNews.Navigation;
-using MomocloNews.Services;
-using Microsoft.Phone.Controls;
-using SimpleMvvmToolkit;
-using Microsoft.Phone.Tasks;
-using System.Windows;
 using System.Globalization;
 using System.Threading;
+using System.Windows;
+using System.Windows.Input;
 using Coding4Fun.Phone.Controls;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
+using MomocloNews.Data;
+using MomocloNews.Services;
+using SimpleMvvmToolkit;
 
 namespace MomocloNews.ViewModels
 {
@@ -29,8 +27,6 @@ namespace MomocloNews.ViewModels
             this.navigator = navigator;
             this.service = service;
             this.dataContext = dataContext;
-            ProgressBar = new ProgressOverlay();
-            ProgressBar.Content = "Loading";
             string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
             if (uuid != null)
             {
@@ -88,8 +84,6 @@ namespace MomocloNews.ViewModels
             }
         }
 
-        public ProgressOverlay ProgressBar;
-
         #endregion
 
         #region Commands
@@ -140,9 +134,9 @@ namespace MomocloNews.ViewModels
                     {
                         var result =
                             MessageBox.Show(
-                            Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationText,
-                            Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationCaption,
-                            MessageBoxButton.OKCancel
+                                Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationText,
+                                Localization.AppResources.PreferencesPage_Notification_ReceiveNotification_ConfirmationCaption,
+                                MessageBoxButton.OKCancel
                             );
                         if (result.Equals(MessageBoxResult.OK))
                         {
