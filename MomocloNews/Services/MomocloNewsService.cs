@@ -25,12 +25,16 @@ namespace MomocloNews.Services
 #endif
             private const string FeedBase = Base + "feed/";
             private const string DeviceBase = SecureBase + "device/";
+            private const string DeviceBaseFallback = Base + "device/";
             public const string FeedGroups = FeedBase + "groups";
             public const string FeedChannels = FeedBase + "channels";
             public const string FeedItems = FeedBase + "items";
             public const string DeviceRegister = DeviceBase + "register";
             public const string DeviceUnregister = DeviceBase + "unregister";
             public const string DeviceUpdate = DeviceBase + "update";
+            public const string DeviceRegisterFallback = DeviceBaseFallback + "register";
+            public const string DeviceUnregisterFallback = DeviceBaseFallback + "unregister";
+            public const string DeviceUpdateFallback = DeviceBaseFallback + "update";
         }
 
         private static class Notification
@@ -382,8 +386,72 @@ namespace MomocloNews.Services
                     },
                     e2 =>
                     {
-                        notificationChannel.Close();
-                        callback(null, e2);
+                        uri = isNewChannel ? API.DeviceRegisterFallback : API.DeviceUpdateFallback;
+                        System.Diagnostics.Debug.WriteLine(uri);
+                        req = WebRequest.CreateHttp(uri);
+                        req.UserAgent = Constants.Net.UserAgent;
+                        req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+                        req.Method = "POST";
+                        req.ContentType = "application/x-www-form-urlencoded";
+
+                        Observable
+                        .FromAsyncPattern<Stream>(req.BeginGetRequestStream, req.EndGetRequestStream)
+                        .Invoke()
+                        .SelectMany
+                        (
+                            stream =>
+                            {
+                                // POSTデータ
+                                var postData = Encoding.UTF8.GetBytes(postDataStr);
+
+                                // 書き込み
+                                stream.Write(postData, 0, postData.Length);
+
+                                // ストリームを閉じる
+                                stream.Close();
+
+                                // 連結
+                                return
+                                    Observable
+                                    .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
+                                    .Invoke();
+                            }
+                        )
+                        .Select<WebResponse, RegisterNotificationChannelResult>
+                        (
+                            res =>
+                            {
+                                // ストリームを取得
+                                Stream stream = res.GetResponseStream();
+                                if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
+                                {
+                                    stream = new GZipInputStream(stream);
+                                }
+
+                                // シリアライズ
+                                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterNotificationChannelResult));
+                                var result = (RegisterNotificationChannelResult)serializer.ReadObject(stream);
+
+                                // ストリームを閉じる
+                                stream.Close();
+
+                                // 結果
+                                return result;
+                            }
+                        )
+                        .ObserveOnDispatcher()
+                        .Subscribe
+                        (
+                            s3 =>
+                            {
+                                callback(s3, null);
+                            },
+                            e3 =>
+                            {
+                                notificationChannel.Close();
+                                callback(null, e3);
+                            }
+                        );
                     }
                 );
             };
@@ -494,8 +562,72 @@ namespace MomocloNews.Services
                     },
                     e2 =>
                     {
-                        //callback(null, e2);
-                        callback(null, null);
+                        uri = API.DeviceUnregisterFallback;
+                        System.Diagnostics.Debug.WriteLine(uri);
+                        req = WebRequest.CreateHttp(uri);
+                        req.UserAgent = Constants.Net.UserAgent;
+                        req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+                        req.Method = "POST";
+                        req.ContentType = "application/x-www-form-urlencoded";
+
+                        Observable
+                        .FromAsyncPattern<Stream>(req.BeginGetRequestStream, req.EndGetRequestStream)
+                        .Invoke()
+                        .SelectMany
+                        (
+                            stream =>
+                            {
+                                // POSTデータ
+                                var postData = Encoding.UTF8.GetBytes(postDataStr);
+
+                                // 書き込み
+                                stream.Write(postData, 0, postData.Length);
+
+                                // ストリームを閉じる
+                                stream.Close();
+
+                                // 連結
+                                return
+                                    Observable
+                                    .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
+                                    .Invoke();
+                            }
+                        )
+                        .Select<WebResponse, UnregisterNotificationChannelResult>
+                        (
+                            res =>
+                            {
+                                // ストリームを取得
+                                Stream stream = res.GetResponseStream();
+                                if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
+                                {
+                                    stream = new GZipInputStream(stream);
+                                }
+
+                                // シリアライズ
+                                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UnregisterNotificationChannelResult));
+                                var result = (UnregisterNotificationChannelResult)serializer.ReadObject(stream);
+
+                                // ストリームを閉じる
+                                stream.Close();
+
+                                // 結果
+                                return result;
+                            }
+                        )
+                        .ObserveOnDispatcher()
+                        .Subscribe
+                        (
+                            s3 =>
+                            {
+                                callback(s3, null);
+                            },
+                            e3 =>
+                            {
+                                //callback(null, e3);
+                                callback(null, null);
+                            }
+                        );
                     }
                 );
             }
@@ -598,7 +730,71 @@ namespace MomocloNews.Services
                 },
                 e2 =>
                 {
-                    callback(null, e2);
+                    uri = API.DeviceUpdateFallback;
+                    System.Diagnostics.Debug.WriteLine(uri);
+                    req = WebRequest.CreateHttp(uri);
+                    req.UserAgent = Constants.Net.UserAgent;
+                    req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+                    req.Method = "POST";
+                    req.ContentType = "application/x-www-form-urlencoded";
+
+                    Observable
+                    .FromAsyncPattern<Stream>(req.BeginGetRequestStream, req.EndGetRequestStream)
+                    .Invoke()
+                    .SelectMany
+                    (
+                        stream =>
+                        {
+                            // POSTデータ
+                            var postData = Encoding.UTF8.GetBytes(postDataStr);
+
+                            // 書き込み
+                            stream.Write(postData, 0, postData.Length);
+
+                            // ストリームを閉じる
+                            stream.Close();
+
+                            // 連結
+                            return
+                                Observable
+                                .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
+                                .Invoke();
+                        }
+                    )
+                    .Select
+                    (
+                        res =>
+                        {
+                            // ストリームを取得
+                            Stream stream = res.GetResponseStream();
+                            if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
+                            {
+                                stream = new GZipInputStream(stream);
+                            }
+
+                            // シリアライズ
+                            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UpdateNotificationChannelResult));
+                            var result = (UpdateNotificationChannelResult)serializer.ReadObject(stream);
+
+                            // ストリームを閉じる
+                            stream.Close();
+
+                            // 結果
+                            return result;
+                        }
+                    )
+                    .ObserveOnDispatcher()
+                    .Subscribe
+                    (
+                        s3 =>
+                        {
+                            callback(s3, null);
+                        },
+                        e3 =>
+                        {
+                            callback(null, e3);
+                        }
+                    );
                 }
             );
         }
