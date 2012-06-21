@@ -9,6 +9,7 @@ using ICSharpCode.SharpZipLib.GZip;
 using Microsoft.Phone.Notification;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace MomocloNews.Services
 {
@@ -19,9 +20,11 @@ namespace MomocloNews.Services
 #if DEBUG
             private const string Base = "http://apid.yamac.net/momoclo_news/v1.0/";
             private const string SecureBase = "https://secure.yamac.net/apid/momoclo_news/v1.0/";
+            public const string TileBackgroundImageBase = "http://lited.yamac.net/";
 #else
             private const string Base = "http://api.yamac.net/momoclo_news/v1.0/";
             private const string SecureBase = "https://secure.yamac.net/api/momoclo_news/v1.0/";
+            public const string TileBackgroundImageBase = "http://lite.yamac.net/";
 #endif
             private const string FeedBase = Base + "feed/";
             private const string DeviceBase = SecureBase + "device/";
@@ -462,7 +465,9 @@ namespace MomocloNews.Services
             {
                 notificationChannel.Open();
                 notificationChannel.BindToShellToast();
-                notificationChannel.BindToShellTile();
+                Collection<Uri> baseUris = new Collection<Uri>();
+                baseUris.Add(new Uri(API.TileBackgroundImageBase, UriKind.Absolute));
+                notificationChannel.BindToShellTile(baseUris);
             }
             else
             {
