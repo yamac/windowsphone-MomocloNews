@@ -8,6 +8,7 @@ Enabling push notification, you can receive momoclo's updates.
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+1.2.0.0: Back tile appears in member color.
 1.1.0.0: Improved push notification functionality.
 1.0.0.0: First release.
 
