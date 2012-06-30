@@ -87,10 +87,12 @@
     <Compile Include="Converters\PriorityConverter.cs" />
     <Compile Include="Converters\ToggleSwitchContentConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Converters\RichTextBoxConverter.cs" />
     <Compile Include="Data\FeedChannel.cs" />
     <Compile Include="Data\FeedDataContext.cs" />
     <Compile Include="Data\FeedGroup.cs" />
     <Compile Include="Data\FeedItem.cs" />
+    <Compile Include="Data\ScheduleItem.cs" />
     <Compile Include="Helpers\AppAttributes.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="Helpers\BindableApplicationBar.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Helpers\DataTemplateSelector.cs" />
     <Compile Include="Helpers\ObjectCollection.cs" />
     <Compile Include="Helpers\VisualTreeHelperExtensions.cs" />
+    <Compile Include="Helpers\BindableRichTextBoxBlocks.cs" />
     <Compile Include="LocalControls\HeaderedContentControl.cs" />
     <Compile Include="Localization\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -121,6 +124,8 @@
     <Compile Include="ViewModels\WebPageViewModel.cs" />
     <Compile Include="ViewModels\ChannelsListViewModel.cs" />
     <Compile Include="ViewModels\ChannelDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\SchedulesListViewModel.cs" />
+    <Compile Include="ViewModels\ScheduleDetailPageViewModel.cs" />
     <Compile Include="Views\ChannelDetailPage.xaml.cs">
       <DependentUpon>ChannelDetailPage.xaml</DependentUpon>
     </Compile>
@@ -133,6 +138,9 @@
     </Compile>
     <Compile Include="Views\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScheduleDetailPage.xaml.cs">
+      <DependentUpon>ScheduleDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Yamac\WebBrowser.xaml.cs">
       <DependentUpon>WebBrowser.xaml</DependentUpon>
@@ -162,6 +170,10 @@
     <Page Include="Views\WebPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ScheduleDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Yamac\WebBrowser.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -28,8 +28,10 @@
         <converters:InverseVisibilityToBooleanConverter x:Key="InverseVisibilityToBooleanConverter"/>
         <converters:ColorCodeToSolidColorBrushConverter x:Key="ColorCodeToSolidColorBrushConverter"/>
         <converters:DateTimeToTimelineFormatStringConverter x:Key="DateTimeToTimelineFormatStringConverter"/>
+        <converters:DateTimeArrayToDateTimeFromToFormatStringConverter x:Key="DateTimeArrayToDateTimeFromToFormatStringConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:ToggleSwitchContentConverter x:Key="ToggleSwitchContentConverter"/>
+        <converters:StringToRichTextBoxBlocksConverter x:Key="StringToRichTextBoxBlocksConverter"/>
         <helpers:AppAttributes x:Key="AppAttributes"/>
 
         <Style TargetType="ScrollViewer">
@@ -727,6 +729,68 @@
             </helpers:ResourceDataTemplateSelector>
         </DataTemplate>
 
+        <!-- スケジュールリスト:アイテム -->
+        <DataTemplate x:Key="ScheduleItemItemTemplate">
+            <!-- アイテム -->
+            <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                <Grid Width="435" Margin="5,20,0,0">
+                    <!-- 列定義 -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- メイン -->
+                    <StackPanel Grid.Column="1">
+                        <!-- カテゴリー+アイテム日時 -->
+                        <StackPanel Orientation="Horizontal">
+                            <!-- カテゴリー -->
+                            <TextBlock
+                                Width="177"
+                                TextAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                TextWrapping="Wrap"
+                                Text="{Binding CategoryName}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                />
+
+                            <!-- アイテム日時 -->
+                            <TextBlock
+                                Width="200"
+                                FontSize="13"
+                                TextAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                TextWrapping="NoWrap"
+                                Text="{Binding StartAtAndEndAt, Converter={StaticResource DateTimeArrayToDateTimeFromToFormatStringConverter}}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                />
+                        </StackPanel>
+
+                        <!-- タイトル -->
+                        <Grid Margin="0,10,0,10">
+                            <TextBlock
+                                FontSize="32"
+                                TextAlignment="Left"
+                                VerticalAlignment="Top"
+                                TextWrapping="Wrap"
+                                Text="{Binding Title}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                />
+                        </Grid>
+
+                        <!-- 場所 -->
+                        <TextBlock
+                            FontSize="13"
+                            TextAlignment="Right"
+                            TextWrapping="Wrap"
+                            Text="{Binding Location}"
+                            Style="{StaticResource PhoneTextSubtleStyle}"
+                            />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        
         <!-- メンバーリスト:アイテム -->
         <DataTemplate x:Key="FeedChannelItemTemplate">
             <toolkit:HubTile

@@ -63,6 +63,14 @@ namespace MomocloNews.Locators
             }
         }
 
+        public ScheduleDetailPageViewModel ScheduleDetailPageViewModel
+        {
+            get
+            {
+                return new ScheduleDetailPageViewModel(TheApp, TheNavigator, TheMomocloNewsService, TheFeedDataContext);
+            }
+        }
+
         public ChannelDetailPageViewModel ChannelDetailPageViewModel
         {
             get

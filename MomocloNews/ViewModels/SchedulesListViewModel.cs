@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Phone.Controls;
 using MomocloNews.Data;
 using MomocloNews.Navigation;
 using MomocloNews.Services;
+using Microsoft.Phone.Controls;
 using SimpleMvvmToolkit;
+using System.Globalization;
+using System.Threading;
+using Microsoft.Phone.Tasks;
+using System.ComponentModel;
 
 namespace MomocloNews.ViewModels
 {
-    public class ChannelsUpdatesListViewModel : ViewModelBase<ChannelsUpdatesListViewModel>
+    public class SchedulesListViewModel : ViewModelBase<SchedulesListViewModel>
     {
         #region Initialization and Cleanup
         /******************************
          * Initialization and Cleanup *
          ******************************/
 
-        public ChannelsUpdatesListViewModel() { }
+        public SchedulesListViewModel() { }
 
-        public ChannelsUpdatesListViewModel(PhoneApplicationFrame app, INavigator navigator, IMomocloNewsService service, FeedDataContext dataContext, int[] groupIds, int[] channelIds)
+        public SchedulesListViewModel(PhoneApplicationFrame app, INavigator navigator, IMomocloNewsService service, FeedDataContext dataContext)
         {
             this.app = app;
             this.navigator = navigator;
             this.service = service;
             this.dataContext = dataContext;
-            this.groupIds = groupIds;
-            this.channelIds = channelIds;
         }
 
         #endregion
@@ -48,8 +52,6 @@ namespace MomocloNews.ViewModels
         INavigator navigator;
         IMomocloNewsService service;
         FeedDataContext dataContext;
-        int[] groupIds;
-        int[] channelIds;
 
         #endregion
 
@@ -85,15 +87,15 @@ namespace MomocloNews.ViewModels
             }
         }
 
-        private ObservableCollection<FeedItem> _FeedItems = new ObservableCollection<FeedItem>();
-        public ObservableCollection<FeedItem> FeedItems
+        private ObservableCollection<ScheduleItem> _ScheduleItems = new ObservableCollection<ScheduleItem>();
+        public ObservableCollection<ScheduleItem> ScheduleItems
         {
-            get { return _FeedItems; }
+            get { return _ScheduleItems; }
             set
             {
-                if (_FeedItems == value) return;
-                _FeedItems = value;
-                NotifyPropertyChanged(m => FeedItems);
+                if (_ScheduleItems == value) return;
+                _ScheduleItems = value;
+                NotifyPropertyChanged(m => ScheduleItems);
             }
         }
 
@@ -112,7 +114,7 @@ namespace MomocloNews.ViewModels
                 {
                     if (e.SelectedItem != null)
                     {
-                        NavigationService.Navigate(new Uri("/Views/WebPage.xaml", UriKind.Relative), e.SelectedItem);
+                        NavigationService.Navigate(new Uri("/Views/ScheduleDetailPage.xaml", UriKind.Relative), e.SelectedItem);
                         e.SelectedItem = null;
                     }
                 }
@@ -126,7 +128,7 @@ namespace MomocloNews.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    LoadFeedItems(false, true);
+                    LoadScheduleItems(false, true);
                 }
                 );
             }
@@ -139,14 +141,14 @@ namespace MomocloNews.ViewModels
          * Methods *
          ***********/
 
-        public void LoadFeedItems(bool clear, bool next)
+        public void LoadScheduleItems(bool clear, bool next)
         {
             if (IsBusy) return;
 
             if (clear)
             {
                 HasNextPage = true;
-                FeedItems.Clear();
+                ScheduleItems.Clear();
                 page = Constants.App.BasePage;
             }
             else
@@ -156,14 +158,16 @@ namespace MomocloNews.ViewModels
                     if (!next) return;
                     if (!HasNextPage) return;
                     page++;
-                } else {
+                }
+                else
+                {
                     HasNextPage = true;
                 }
             }
 
             IsBusy = true;
 
-            service.GetFeedItems(dataContext, groupIds, channelIds, page, LoadFeedItemsCompleted);
+            service.GetScheduleItems(page, LoadScheduleItemsCompleted);
         }
 
         #endregion
@@ -173,7 +177,7 @@ namespace MomocloNews.ViewModels
          * Completion Callbacks *
          ************************/
 
-        protected void LoadFeedItemsCompleted(MomocloNewsService.GetFeedItemsResult result, Exception error)
+        protected void LoadScheduleItemsCompleted(MomocloNewsService.GetScheduleItemsResult result, Exception error)
         {
             if (!IsBusy)
             {
@@ -185,13 +189,13 @@ namespace MomocloNews.ViewModels
 
             if (error != null)
             {
-                NotifyError(Localization.AppResources.MainPage_Error_FailedToGetFeedItems, error);
+                NotifyError(Localization.AppResources.MainPage_Error_FailedToGetScheduleItems, error);
                 return;
             }
-            
-            foreach (var item in result.FeedItems)
+
+            foreach (var item in result.ScheduleItems)
             {
-                FeedItems.Add(item);
+                ScheduleItems.Add(item);
             }
             HasNextPage = result.HasNext;
         }

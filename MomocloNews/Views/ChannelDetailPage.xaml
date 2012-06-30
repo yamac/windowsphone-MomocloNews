@@ -54,7 +54,7 @@
     <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0,10,0,0">
         <!-- ピボット -->
         <controls:Pivot
-            Title="{Binding Path=Resources.MainPage_PivotTitle, Source={StaticResource LocalizedResources}}"
+            Title="{Binding Path=Resources.ChannelDetailPage_PivotTitle, Source={StaticResource LocalizedResources}}"
             >
 
             <!-- ピボット:タイトル -->

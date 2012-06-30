@@ -70,6 +70,15 @@ namespace MomocloNews.Localization {
         }
         
         /// <summary>
+        ///   MEMBER に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ChannelDetailPage_PivotTitle {
+            get {
+                return ResourceManager.GetString("ChannelDetailPage_PivotTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Nickname に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ChannelDetailPage_Profile_NickName {
@@ -133,6 +142,15 @@ namespace MomocloNews.Localization {
         }
         
         /// <summary>
+        ///   {0} to {1} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Common_DateTimeFromToFormat_FromTo {
+            get {
+                return ResourceManager.GetString("Common_DateTimeFromToFormat_FromTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Just a moment... に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Common_Loading {
@@ -178,6 +196,24 @@ namespace MomocloNews.Localization {
         }
         
         /// <summary>
+        ///   Can&apos;t retrieve data. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_Error_FailedToGetFeedItems {
+            get {
+                return ResourceManager.GetString("MainPage_Error_FailedToGetFeedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Can&apos;t retrieve data. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_Error_FailedToGetScheduleItems {
+            get {
+                return ResourceManager.GetString("MainPage_Error_FailedToGetScheduleItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   web scraps に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainPage_MatomeChannelsUpdatesList_Title {
@@ -210,6 +246,15 @@ namespace MomocloNews.Localization {
         public static string MainPage_PivotTitle {
             get {
                 return ResourceManager.GetString("MainPage_PivotTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   schedule に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainPage_ScheduleList_Title {
+            get {
+                return ResourceManager.GetString("MainPage_ScheduleList_Title", resourceCulture);
             }
         }
         
@@ -363,6 +408,69 @@ namespace MomocloNews.Localization {
         public static string PreferencesPage_TwitterAccountForSupportValue {
             get {
                 return ResourceManager.GetString("PreferencesPage_TwitterAccountForSupportValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   schedule details に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Date に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details_DateTime {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details_DateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Description に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details_Description {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Location に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details_Location {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Title に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details_Title {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Type に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_Details_Type {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_Details_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   SCHEDULE に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ScheduleDetailPage_PivotTitle {
+            get {
+                return ResourceManager.GetString("ScheduleDetailPage_PivotTitle", resourceCulture);
             }
         }
         

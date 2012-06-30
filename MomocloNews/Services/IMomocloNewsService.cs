@@ -8,7 +8,10 @@ namespace MomocloNews.Services
         // Feed
         void GetAllFeedGroupsAndChannels(FeedDataContext dataContext, Action<Exception> callback);
         void GetFeedItems(FeedDataContext dataContext, int[] groupIds, int[] channelIds, int page, Action<MomocloNewsService.GetFeedItemsResult, Exception> callback);
-    
+
+        // Schedule
+        void GetScheduleItems(int page, Action<MomocloNewsService.GetScheduleItemsResult, Exception> callback);
+
         // Notification
         void RegisterNotificationChannel(string version, string langCode, Action<MomocloNewsService.RegisterNotificationChannelResult, Exception> callback);
         void UnregisterNotificationChannel(string uuid, Action<MomocloNewsService.UnregisterNotificationChannelResult, Exception> callback);

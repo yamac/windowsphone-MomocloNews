@@ -120,6 +120,9 @@
   <data name="ChannelDetailPage_MemberChannelsUpdatesList_Title" xml:space="preserve">
     <value>what's new</value>
   </data>
+  <data name="ChannelDetailPage_PivotTitle" xml:space="preserve">
+    <value>MEMBER</value>
+  </data>
   <data name="ChannelDetailPage_Profile_NickName" xml:space="preserve">
     <value>Nickname</value>
   </data>
@@ -141,6 +144,9 @@
   <data name="Common_AppBar_MenuItemText_Refresh" xml:space="preserve">
     <value>refresh</value>
   </data>
+  <data name="Common_DateTimeFromToFormat_FromTo" xml:space="preserve">
+    <value>{0} to {1}</value>
+  </data>
   <data name="Common_Loading" xml:space="preserve">
     <value>Just a moment...</value>
   </data>
@@ -156,6 +162,12 @@
   <data name="MainPage_Error_FailedToGetAllFeedGroupsAndChannels" xml:space="preserve">
     <value>Can't retrieve data.</value>
   </data>
+  <data name="MainPage_Error_FailedToGetFeedItems" xml:space="preserve">
+    <value>Can't retrieve data.</value>
+  </data>
+  <data name="MainPage_Error_FailedToGetScheduleItems" xml:space="preserve">
+    <value>Can't retrieve data.</value>
+  </data>
   <data name="MainPage_MatomeChannelsUpdatesList_Title" xml:space="preserve">
     <value>web scraps</value>
   </data>
@@ -167,6 +179,9 @@
   </data>
   <data name="MainPage_PivotTitle" xml:space="preserve">
     <value>momoclo news</value>
+  </data>
+  <data name="MainPage_ScheduleList_Title" xml:space="preserve">
+    <value>schedule</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value />
@@ -218,6 +233,27 @@
   </data>
   <data name="PreferencesPage_TwitterAccountForSupportValue" xml:space="preserve">
     <value>@yamac_support</value>
+  </data>
+  <data name="ScheduleDetailPage_Details" xml:space="preserve">
+    <value>schedule details</value>
+  </data>
+  <data name="ScheduleDetailPage_Details_DateTime" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="ScheduleDetailPage_Details_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="ScheduleDetailPage_Details_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="ScheduleDetailPage_Details_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="ScheduleDetailPage_Details_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="ScheduleDetailPage_PivotTitle" xml:space="preserve">
+    <value>SCHEDULE</value>
   </data>
   <data name="WebPage_AppBar_MenuItemText_OpenWithBrowser" xml:space="preserve">
     <value>open with browser</value>

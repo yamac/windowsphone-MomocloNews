@@ -27,11 +27,13 @@ namespace MomocloNews.Services
             public const string TileBackgroundImageBase = "http://lite.yamac.net/";
 #endif
             private const string FeedBase = Base + "feed/";
+            private const string ScheduleBase = Base + "schedule/";
             private const string DeviceBase = SecureBase + "device/";
             private const string DeviceBaseFallback = Base + "device/";
             public const string FeedGroups = FeedBase + "groups";
             public const string FeedChannels = FeedBase + "channels";
             public const string FeedItems = FeedBase + "items";
+            public const string ScheduleItems = ScheduleBase + "items";
             public const string DeviceRegister = DeviceBase + "register";
             public const string DeviceUnregister = DeviceBase + "unregister";
             public const string DeviceUpdate = DeviceBase + "update";
@@ -264,6 +266,68 @@ namespace MomocloNews.Services
             );
         }
 
+        public class GetScheduleItemsResult
+        {
+            public ScheduleItem[] ScheduleItems { get; private set; }
+            public bool HasNext { get; private set; }
+
+            public GetScheduleItemsResult(ScheduleItem[] items, bool hasNext)
+            {
+                ScheduleItems = items;
+                HasNext = hasNext;
+            }
+        }
+
+        public void GetScheduleItems(int page, Action<GetScheduleItemsResult, Exception> callback)
+        {
+            bool hasParams = false;
+            string uri = API.ScheduleItems;
+            uri += (hasParams ? "&" : "?") + "rows=" + Constants.App.ItemsPerPage + "&page=" + page;
+            //System.Diagnostics.Debug.WriteLine("GetScheduleItems:" + uri);
+            var req = WebRequest.CreateHttp(uri);
+            req.UserAgent = Constants.Net.UserAgent;
+            req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+
+            Observable
+            .FromAsyncPattern<WebResponse>(req.BeginGetResponse, req.EndGetResponse)
+            .Invoke()
+            .Select<WebResponse, GetScheduleItemsResult>
+            (
+                res =>
+                {
+                    // ストリームを取得
+                    Stream stream = res.GetResponseStream();
+                    if (string.Equals("gzip", res.Headers[HttpRequestHeader.ContentEncoding], StringComparison.OrdinalIgnoreCase))
+                    {
+                        stream = new GZipInputStream(stream);
+                    }
+
+                    // シリアライズ
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ScheduleItem[]));
+                    var items = (ScheduleItem[])serializer.ReadObject(stream);
+
+                    // ストリームを閉じる
+                    stream.Close();
+
+                    // 結果
+                    var result = new GetScheduleItemsResult(items, (items.Count() == Constants.App.ItemsPerPage) && (page < Constants.App.MaxPage));
+
+                    return result;
+                }
+            )
+            .ObserveOnDispatcher()
+            .Subscribe
+            (
+                s =>
+                {
+                    callback(s, null);
+                },
+                e =>
+                {
+                    callback(null, e);
+                }
+            );
+        }
         [DataContract]
         public class RegisterNotificationChannelResult
         {

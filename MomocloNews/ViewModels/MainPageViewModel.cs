@@ -52,8 +52,8 @@ namespace MomocloNews.ViewModels
                 service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, null, true, UpdateNotificationChannelCompleted);
             }
 
-            LoadPivotItem(2);
-            LoadPivotItem(0);
+            LoadPivotItem(3, true);
+            LoadPivotItem(0, true);
 
             ShellTile shellTile = ShellTile.ActiveTiles.First();
             StandardTileData shellTileData = new StandardTileData()
@@ -132,6 +132,18 @@ namespace MomocloNews.ViewModels
             }
         }
 
+        private SchedulesListViewModel _SchedulesListViewModel = null;
+        public SchedulesListViewModel SchedulesListViewModel
+        {
+            get { return _SchedulesListViewModel; }
+            set
+            {
+                if (_SchedulesListViewModel == value) return;
+                _SchedulesListViewModel = value;
+                NotifyPropertyChanged(m => SchedulesListViewModel);
+            }
+        }
+
         private ChannelsListViewModel _ChannelsListViewModel = null;
         public ChannelsListViewModel ChannelsListViewModel
         {
@@ -158,7 +170,7 @@ namespace MomocloNews.ViewModels
                 return new DelegateCommand<Pivot>(
                 (e) =>
                 {
-                    LoadPivotItem(e.SelectedIndex);
+                    LoadPivotItem(e.SelectedIndex, true);
                 }
                 );
             }
@@ -171,24 +183,7 @@ namespace MomocloNews.ViewModels
                 return new DelegateCommand<Pivot>(
                 (e) =>
                 {
-                    switch (e.SelectedIndex)
-                    {
-                        case 0:
-                            {
-                                MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
-                                break;
-                            }
-                        case 1:
-                            {
-                                MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
-                                break;
-                            }
-                        default:
-                            {
-                                ChannelsListViewModel.LoadAllFeedGroupsAndChannels();
-                                break;
-                            }
-                    }
+                    LoadPivotItem(e.SelectedIndex, false);
                 }
                 ,
                 (e) =>
@@ -211,10 +206,16 @@ namespace MomocloNews.ViewModels
                             {
                                 return !MatomeChannelsUpdatesListViewModel.IsBusy;
                             }
-                        default:
+                        case 2:
+                            {
+                                return !SchedulesListViewModel.IsBusy;
+                            }
+                        case 3:
                             {
                                 return !ChannelsListViewModel.IsBusy;
                             }
+                        default:
+                            return false;
                     }
                 }
                 );
@@ -246,7 +247,7 @@ namespace MomocloNews.ViewModels
          * Methods *
          ***********/
 
-        private void LoadPivotItem(int id)
+        private void LoadPivotItem(int id, bool initializing)
         {
             switch (id)
             {
@@ -257,6 +258,10 @@ namespace MomocloNews.ViewModels
                         MemberChannelsUpdatesListViewModel =
                             new ChannelsUpdatesListViewModel(app, navigator, service, dataContext, new int[] { 1 }, null);
                         MemberChannelsUpdatesListViewModel.ErrorNotice += OnErrorNotice;
+                        MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                    }
+                    else if (!initializing)
+                    {
                         MemberChannelsUpdatesListViewModel.LoadFeedItems(true, false);
                     }
                     break;
@@ -270,14 +275,37 @@ namespace MomocloNews.ViewModels
                         MatomeChannelsUpdatesListViewModel.ErrorNotice += OnErrorNotice;
                         MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
                     }
+                    else if (!initializing)
+                    {
+                        MatomeChannelsUpdatesListViewModel.LoadFeedItems(true, false);
+                    }
                     break;
                 }
                 case 2:
+                {
+                    if (SchedulesListViewModel == null)
+                    {
+                        SchedulesListViewModel =
+                            new SchedulesListViewModel(app, navigator, service, dataContext);
+                        SchedulesListViewModel.ErrorNotice += OnErrorNotice;
+                        SchedulesListViewModel.LoadScheduleItems(true, false);
+                    }
+                    else if (!initializing)
+                    {
+                        SchedulesListViewModel.LoadScheduleItems(true, false);
+                    }
+                    break;
+                }
+                case 3:
                 {
                     if (ChannelsListViewModel == null)
                     {
                         ChannelsListViewModel = new ChannelsListViewModel(app, navigator, service, dataContext);
                         ChannelsListViewModel.ErrorNotice += OnErrorNotice;
+                        ChannelsListViewModel.LoadAllFeedGroupsAndChannels();
+                    }
+                    else if (!initializing)
+                    {
                         ChannelsListViewModel.LoadAllFeedGroupsAndChannels();
                     }
                     break;
