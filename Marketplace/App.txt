@@ -1,4 +1,4 @@
 Title     : ももいろクラブ
 Category1 : エンターテイメント
 Category2 : 
-Deeplink  : 
+Deeplink  : http://windowsphone.com/s?appid=b81b2d92-60ab-4d27-bc19-ea5013dd7b97

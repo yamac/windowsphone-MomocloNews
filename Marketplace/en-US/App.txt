@@ -1,13 +1,13 @@
 Desc1     : lovely momoclo's app
 Desc2     :
-Do you know 'momoclo'? Read blog articles of momoclo by using this application. You can also read web scraps of momoclo.
-
-Enabling push notification, you can receive momoclo's updates.
+A 'momoclo news' app allows you to read Momoclo's blog and you can receive push notification when Momoclo posts a blog article.
+You can also read Momoclo fan's web scraps and Momoclo's event schedule.
 
 *SOME CONTENTS SUCH AS MEMBER NAMES, BLOG TITLES AND BLOG ARTICLES ARE DISPLAYED IN JAPANESE.
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+1.3.0.0: Added Momoclo's event schedule list.
 1.2.0.0: Back tile appears in member color.
 1.1.0.0: Improved push notification functionality.
 1.0.0.0: First release.
