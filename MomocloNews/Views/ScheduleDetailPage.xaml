@@ -86,17 +86,18 @@
             <controls:PivotItem Header="{Binding Path=Resources.ScheduleDetailPage_Details, Source={StaticResource LocalizedResources}}">
                 <ScrollViewer>
                     <StackPanel>
-                        <!-- タイトル -->
+                        <!-- 種別 -->
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ScheduleDetailPage_Details_Type, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 Text="{Binding ScheduleItem.CategoryName}"
                                 TextWrapping="Wrap"
                                 />
@@ -106,13 +107,14 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ScheduleDetailPage_Details_Title, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 Text="{Binding ScheduleItem.Title}"
                                 TextWrapping="Wrap"
                                 />
@@ -122,13 +124,14 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ScheduleDetailPage_Details_DateTime, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 Text="{Binding ScheduleItem.StartAtAndEndAt, Converter={StaticResource DateTimeArrayToDateTimeFromToFormatStringConverter}}"
                                 TextWrapping="Wrap"
                                 />
@@ -138,13 +141,14 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}" Visibility="{Binding ScheduleItem.IsLocationAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ScheduleDetailPage_Details_Location, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 Text="{Binding ScheduleItem.Location}"
                                 TextWrapping="Wrap"
                                 />
@@ -154,15 +158,14 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}" Visibility="{Binding ScheduleItem.IsContentAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ScheduleDetailPage_Details_Description, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <RichTextBox
-                                IsReadOnly="True"
                                 FontFamily="{StaticResource PhoneFontFamilyNormal}"
-                                FontSize="{StaticResource PhoneFontSizeNormal}"
-                                Foreground="{StaticResource PhoneSubtleBrush}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
+                                Foreground="{StaticResource PhoneForegroundBrush}"
                                 TextWrapping="Wrap"
                                 helpers:BindableRichTextBoxBlocks.Blocks="{Binding ScheduleItem.Content, Converter={StaticResource StringToRichTextBoxBlocksConverter}}"
                                 />

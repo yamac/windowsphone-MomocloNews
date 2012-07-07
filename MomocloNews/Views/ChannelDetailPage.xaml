@@ -104,12 +104,12 @@
                             <!-- アイテムタイトル -->
                             <TextBlock
                                 Grid.Column="0"
-                                FontSize="30"
                                 TextAlignment="Left"
                                 VerticalAlignment="Top"
                                 TextWrapping="Wrap"
                                 Text="{Binding FeedChannel.AuthorName}"
                                 Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 />
                         </StackPanel>
 
@@ -117,13 +117,14 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ChannelDetailPage_Profile_NickName, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextSubtleStyle}"
+                                Style="{StaticResource PhoneTextNormalStyle}"
+                                FontSize="{StaticResource PhoneFontSizeLarge}"
                                 Text="{Binding FeedChannel.AuthorNickName}"
                                 TextWrapping="Wrap"
                                 />
@@ -133,7 +134,7 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ChannelDetailPage_Profile_OfficialProfile, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
@@ -154,7 +155,7 @@
                         <StackPanel Margin="{StaticResource PhoneMargin}">
                             <TextBlock
                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                Style="{StaticResource PhoneTextLargeStyle}"
+                                Style="{StaticResource PhoneTextSubtleStyle}"
                                 Text="{Binding Path=Resources.ChannelDetailPage_Profile_OfficialBlog, Source={StaticResource LocalizedResources}}"
                                 TextWrapping="Wrap"
                                 />
