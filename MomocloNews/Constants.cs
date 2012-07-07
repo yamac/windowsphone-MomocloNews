@@ -16,6 +16,7 @@ namespace MomocloNews
 
         public static class AppKey
         {
+            public const string Version = "Version";
             public const string LastUpdate = "LastUpdate";
             public const string NotificationConfirmation = "NotificationConfirmation";
             public const string NotificationUuid = "NotificationUuid";
