@@ -7,6 +7,7 @@ You can also read Momoclo fan's web scraps and Momoclo's event schedule.
 *PUSH NOTIFICATION FUNCTIONALITY IS BETA VERSION. IT MAY NOT WORK CORRECTLY.
 
 Versions
+1.4.0.0: Fixed design. Improved push notification functionality.
 1.3.0.0: Added Momoclo's event schedule list.
 1.2.0.0: Back tile appears in member color.
 1.1.0.0: Improved push notification functionality.
