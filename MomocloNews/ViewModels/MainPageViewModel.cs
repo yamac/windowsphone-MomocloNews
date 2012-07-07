@@ -9,6 +9,7 @@ using MomocloNews.Data;
 using MomocloNews.Navigation;
 using MomocloNews.Services;
 using SimpleMvvmToolkit;
+using System.Windows;
 
 namespace MomocloNews.ViewModels
 {
@@ -45,11 +46,24 @@ namespace MomocloNews.ViewModels
 
         private void OnInitializeCompleted(object sender, NotificationEventArgs e)
         {
+            bool firstBoot = false;
+            float? version = Helpers.AppSettings.GetValueOrDefault<float?>(Constants.AppKey.Version, null);
+            if (version == null)
+            {
+                System.Diagnostics.Debug.WriteLine("first boot");
+                firstBoot = true;
+            }
+            else if (version < Helpers.AppAttributes.VersionAsFloat)
+            {
+                System.Diagnostics.Debug.WriteLine("version up:" + version + " to " + Helpers.AppAttributes.VersionAsFloat);
+            }
+            Helpers.AppSettings.AddOrUpdateValue(Constants.AppKey.Version, Helpers.AppAttributes.VersionAsFloat);
+
             string uuid = Helpers.AppSettings.GetValueOrDefault<string>(Constants.AppKey.NotificationUuid, null);
             if (uuid != null)
             {
                 CultureInfo uicc = Thread.CurrentThread.CurrentUICulture;
-                service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, null, true, UpdateNotificationChannelCompleted);
+                service.UpdateNotificationChannel(uuid, Helpers.AppAttributes.Version, uicc.Name, null, true, firstBoot, UpdateNotificationChannelCompleted);
             }
 
             LoadPivotItem(3, true);
