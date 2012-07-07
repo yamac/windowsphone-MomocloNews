@@ -15,6 +15,6 @@ namespace MomocloNews.Services
         // Notification
         void RegisterNotificationChannel(string version, string langCode, Action<MomocloNewsService.RegisterNotificationChannelResult, Exception> callback);
         void UnregisterNotificationChannel(string uuid, Action<MomocloNewsService.UnregisterNotificationChannelResult, Exception> callback);
-        void UpdateNotificationChannel(string uuid, string version, string langCode, int[] channelIds, bool resetUnreads, Action<MomocloNewsService.UpdateNotificationChannelResult, Exception> callback);
+        void UpdateNotificationChannel(string uuid, string version, string langCode, int[] channelIds, bool resetUnreads, bool fixTile, Action<MomocloNewsService.UpdateNotificationChannelResult, Exception> callback);
     }
 }

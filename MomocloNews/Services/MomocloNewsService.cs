@@ -18,28 +18,28 @@ namespace MomocloNews.Services
         private static class API
         {
 #if DEBUG
-            private const string Base = "http://apid.yamac.net/momoclo_news/v1.0/";
-            private const string SecureBase = "https://secure.yamac.net/apid/momoclo_news/v1.0/";
-            public const string TileBackgroundImageBase = "http://lited.yamac.net/";
+            private static string Base { get { return "http://apid.yamac.net/momoclo_news/v" + Helpers.AppAttributes.Version + "/"; } }
+            private static string SecureBase { get { return "https://secure.yamac.net/apid/momoclo_news/v" + Helpers.AppAttributes.Version + "/"; } }
+            public static string TileBackgroundImageBase { get { return "http://lited.yamac.net/"; } }
 #else
-            private const string Base = "http://api.yamac.net/momoclo_news/v1.0/";
-            private const string SecureBase = "https://secure.yamac.net/api/momoclo_news/v1.0/";
-            public const string TileBackgroundImageBase = "http://lite.yamac.net/";
+            private static string Base { get { return "http://api.yamac.net/momoclo_news/v" + Helpers.AppAttributes.Version + "/"; } }
+            private static string SecureBase { get { return "https://secure.yamac.net/api/momoclo_news/v" + Helpers.AppAttributes.Version + "/"; } }
+            public static string TileBackgroundImageBase { get { return "http://lite.yamac.net/"; } }
 #endif
-            private const string FeedBase = Base + "feed/";
-            private const string ScheduleBase = Base + "schedule/";
-            private const string DeviceBase = SecureBase + "device/";
-            private const string DeviceBaseFallback = Base + "device/";
-            public const string FeedGroups = FeedBase + "groups";
-            public const string FeedChannels = FeedBase + "channels";
-            public const string FeedItems = FeedBase + "items";
-            public const string ScheduleItems = ScheduleBase + "items";
-            public const string DeviceRegister = DeviceBase + "register";
-            public const string DeviceUnregister = DeviceBase + "unregister";
-            public const string DeviceUpdate = DeviceBase + "update";
-            public const string DeviceRegisterFallback = DeviceBaseFallback + "register";
-            public const string DeviceUnregisterFallback = DeviceBaseFallback + "unregister";
-            public const string DeviceUpdateFallback = DeviceBaseFallback + "update";
+            private static string FeedBase = Base + "feed/";
+            private static string ScheduleBase = Base + "schedule/";
+            private static string DeviceBase = SecureBase + "device/";
+            private static string DeviceBaseFallback = Base + "device/";
+            public static string FeedGroups = FeedBase + "groups";
+            public static string FeedChannels = FeedBase + "channels";
+            public static string FeedItems = FeedBase + "items";
+            public static string ScheduleItems = ScheduleBase + "items";
+            public static string DeviceRegister = DeviceBase + "register";
+            public static string DeviceUnregister = DeviceBase + "unregister";
+            public static string DeviceUpdate = DeviceBase + "update";
+            public static string DeviceRegisterFallback = DeviceBaseFallback + "register";
+            public static string DeviceUnregisterFallback = DeviceBaseFallback + "unregister";
+            public static string DeviceUpdateFallback = DeviceBaseFallback + "update";
         }
 
         private static class Notification
@@ -716,7 +716,7 @@ namespace MomocloNews.Services
             public string StatusName { get; set; }
         }
 
-        public void UpdateNotificationChannel(string uuid, string version, string langCode, int[] channelIds, bool resetUnreads, Action<UpdateNotificationChannelResult, Exception> callback)
+        public void UpdateNotificationChannel(string uuid, string version, string langCode, int[] channelIds, bool resetUnreads, bool fixTile, Action<UpdateNotificationChannelResult, Exception> callback)
         {
             System.Diagnostics.Debug.WriteLine("UpdateNotificationChannel");
             string uri = API.DeviceUpdate;
@@ -744,6 +744,19 @@ namespace MomocloNews.Services
             req.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
+
+            HttpNotificationChannel notificationChannel;
+            notificationChannel = HttpNotificationChannel.Find(Notification.ChannelName);
+            if (notificationChannel != null && fixTile)
+            {
+                if (notificationChannel.IsShellTileBound)
+                {
+                    notificationChannel.UnbindToShellTile();
+                    Collection<Uri> baseUris = new Collection<Uri>();
+                    baseUris.Add(new Uri(API.TileBackgroundImageBase, UriKind.Absolute));
+                    notificationChannel.BindToShellTile(baseUris);
+                }
+            }
 
             Observable
             .FromAsyncPattern<Stream>(req.BeginGetRequestStream, req.EndGetRequestStream)
