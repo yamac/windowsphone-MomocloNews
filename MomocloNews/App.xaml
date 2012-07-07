@@ -743,10 +743,9 @@
                     <!-- メイン -->
                     <StackPanel Grid.Column="1">
                         <!-- カテゴリー+アイテム日時 -->
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical">
                             <!-- カテゴリー -->
                             <TextBlock
-                                Width="177"
                                 TextAlignment="Left"
                                 VerticalAlignment="Bottom"
                                 TextWrapping="Wrap"
@@ -756,7 +755,6 @@
 
                             <!-- アイテム日時 -->
                             <TextBlock
-                                Width="200"
                                 FontSize="13"
                                 TextAlignment="Right"
                                 VerticalAlignment="Bottom"
