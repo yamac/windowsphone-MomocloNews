@@ -11,7 +11,7 @@ namespace MomocloNews.Converters
     {
         private Regex regex =
             new Regex(
-                @"(((http|https|ftp|news|file)+\:\/\/)[&#95;.a-z0-9-]+\.[a-z0-9\/&#95;:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])",
+                @"(((http|https|ftp|news|file)+\:\/\/)[_.a-z0-9-]+\.[a-z0-9\/_:@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])",
                 RegexOptions.IgnoreCase
             );
 
@@ -26,7 +26,7 @@ namespace MomocloNews.Converters
                 var match = regex.Match(originalString);
                 while (match.Success)
                 {
-                    paragraph.Inlines.Add(new Run() { Text = originalString.Substring(index, match.Index) });
+                    paragraph.Inlines.Add(new Run() { Text = originalString.Substring(index, match.Index - index) });
                     var hyperlink = new Hyperlink();
                     hyperlink.Inlines.Add(new Run() { Text = match.Value });
                     hyperlink.NavigateUri = new Uri(match.Value, UriKind.Absolute);
@@ -35,7 +35,10 @@ namespace MomocloNews.Converters
                     index += match.Index + match.Length;
                     match = match.NextMatch();
                 }
-                paragraph.Inlines.Add(new Run() { Text = originalString.Substring(index) });
+                if (index < originalString.Length)
+                {
+                    paragraph.Inlines.Add(new Run() { Text = originalString.Substring(index) });
+                }
                 blocks.Add(paragraph);
             }
             return blocks;
